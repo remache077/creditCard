@@ -9,74 +9,86 @@
 *   Date        version     Details
 *   ----------  -------     -----------------------
 *   12/18/2017  1.0         Initial version
+*   12/22/2017  1.1         changed to use classes
 *****************************************************************/
 
 #include <iostream>
-//#include <string>
 #include <stdio.h>
-//#include <stdlib.h>
 #include <sstream>
 #include <cmath>
-#define toDigit(c) (c-'0')
-
+//#define toDigit(c) (c-'0')
 using namespace std;
 const int ccSize = 16;
 
 
-int checkValidCC (long long ccNum){
+class checkValidCreditCard
+{ private:
+    long long int ccNum;
+    int ccArray[ccSize];
+  public:
+    int checkValid();
+    checkValidCreditCard(long long int ccNum);
+   ~checkValidCreditCard() {};
+};
 
-int ccArray[ccSize];
-int remain=0;
 
+
+checkValidCreditCard::checkValidCreditCard(long long int num)
+{
+    ccNum = num;
+    cout << "ccNum:: " <<  ccNum << '\n';
+}
+
+
+
+
+int checkValidCreditCard::checkValid (){
+// convert to str
 std::stringstream ss;
 ss << ccNum;
 std::string ccNumStr = ss.str();
-std::cout << ccNumStr << '\n';
-
-// check right size of 16
-if (ccNumStr.length() != ccSize)
-{
-    cout << "size of ccNumStr: " <<  ccNumStr.length() << '\n';
-    return 0;
-}
-
+std::cout << "ccnumstr: " << ccNumStr << '\n';
 /*
 Double the value of every second digit beginning from the right and place in array ccArray;
 if the value is greater than 9 subtract 9 from and place this value in array
 */
-
-int j;
+int j=0;
+int remain;
+cout << "ccArray:  " ;
 for (int i=ccSize-1; i>=0; i--)
 {
-    j = toDigit(ccNumStr[i]);
+    char c = ccNumStr[i];
+    j =  c - '0';
     remain = i%2;
     if (remain == 0){
         if (j*2 > 9)
             ccArray[i]= j*2-9;
         else
             ccArray[i] = j*2;
-        cout << ccArray[i];
+        //cout << ccArray[i];
     }
     else {
         ccArray[i] = j;
-        cout << ccArray[i];
-        //cout << "ccArray["<<i<<"]: " << ccArray[i] << '\n';
+        //cout << ccArray[i];
     }
+    cout << ccArray[i];
 }
-
 // add array entries into sum variable
 int sum=0;
 for (int i=0; i<ccSize; i++) sum += ccArray[i];
-cout << " sum: " << sum;
-
+cout << '\n' << "sum: " << sum;
 // Compute remainder and return true if zero remainder, otherwise return false.
 double rem = 0;
-rem = remainder( sum,10.0); cout << " remainder: " << rem << '\n';
-if (rem == 0)
-   return 1;
+rem = remainder( sum,10.0);
+cout << " remainder: " << rem << '\n';
+if (rem == 0)\
+    cout << "CC is a Valid"  << '\n';
 else
-   return 0;
+    cout << "CC is not a Valid CC" << '\n';
+cout << '\n';
+return 0;
 }
+
 
 
 
@@ -92,28 +104,13 @@ else
 int main()
 {
 
-long long ccNum = 4012888888881881;
-if (checkValidCC(ccNum))
-   cout << "CC: " << ccNum<< " is a Valid CC"  << '\n';
-else
-   cout << "CC: " << ccNum << " is not a Valid CC" << '\n';
-cout << '\n';
+checkValidCreditCard CC1(4012888888881881);
+CC1.checkValid();
 
 
-ccNum = 4012888888881882;
-if (checkValidCC(ccNum))
-   cout << "CC: " << ccNum<< " is a Valid CC"  << '\n';
-else
-   cout << "CC: " << ccNum << " is not a Valid CC" << '\n';
-cout << '\n';
+checkValidCreditCard CC2(4012888888881882);
+CC2.checkValid();
 
-
-ccNum = 5262191094566162;
-if (checkValidCC(ccNum))
-   cout << "CC: " << ccNum<< " is a Valid CC"  << '\n';
-else
-   cout << "CC: " << ccNum << " is not a Valid CC" << '\n';
-cout << '\n';
 
 return 0;
 }
